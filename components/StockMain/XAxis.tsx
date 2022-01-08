@@ -21,6 +21,12 @@ interface XAxisProps {
   offsetX: number,
   timeSeries: {
     xAxisTitle: number
+    open: number,
+    height: number,
+    low: number,
+    close: number,
+    volume: number,
+    title: string
   }[],
 }
 
@@ -33,7 +39,7 @@ const XAxis: React.FC<XAxisProps> = ({ timeSeries, size, scaleX, offsetX }) => {
  
     return timeSeries.map((data) => {
       const translateX = getTranslateX(data.xAxisTitle)
-      console.log(data)
+
       // TODO: auto adjust the title interval level
       return (
         <>
@@ -43,7 +49,7 @@ const XAxis: React.FC<XAxisProps> = ({ timeSeries, size, scaleX, offsetX }) => {
             && translateX <= size.width
             && (
               <XAxisTick
-                key={data.xAxisTitle}
+                key={String(data.xAxisTitle)}
                 title={data.xAxisTitle.toString()}
                 translateX={getTranslateX(data.xAxisTitle)}
               />

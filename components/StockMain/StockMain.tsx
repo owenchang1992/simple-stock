@@ -12,6 +12,7 @@ interface Stock {
   volume: number,
   title: string
 }
+
 interface Props {
   timeSeries: Stock[]
 }

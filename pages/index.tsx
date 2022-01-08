@@ -1,10 +1,12 @@
 import type { NextPage } from 'next'
+import useSWR from 'swr'
 import styles from '../styles/Home.module.css'
+import { getStock } from '../apis/getStock'
 
 import StockTitle from '../components/StockTitle/StockTitle'
 import StockMain from '../components/StockMain/StockMain'
 
-import testJson from '../public/test.json'
+import testData from '../public/test.json'
 
 //TODO 1. handle organize Meta Data 2. fix typescript any
 const translateData = (stockData: any) => {
@@ -32,13 +34,17 @@ const translateData = (stockData: any) => {
 }
 
 const Home: NextPage = () => {
-  const stockData = translateData(testJson)
+  // const { data, error } = useSWR('AAPL', getStock)
+  // const stockData = data && !error && translateData(data.data)
+  const stockData = translateData(testData)
 
   return (
-    <div className={styles.container}>
-      <StockTitle metaData={stockData.metaData}/>
-      <StockMain timeSeries={stockData.timeSeries}/>
-    </div>
+    stockData ? (
+      <div className={styles.container}>
+        <StockTitle metaData={stockData.metaData}/>
+        <StockMain timeSeries={stockData.timeSeries}/>
+      </div>
+    ) : null
   )
 }
 
