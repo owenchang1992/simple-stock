@@ -101,17 +101,15 @@ const XAxis: React.FC<XAxisProps> = ({ matadata, timeSeries, size, scaleX, offse
     })
   }
 
-  return (
-    <svg className={style.gragh}>
-      <g className={style['x-axis']} style={{transform: `translateY(${size.height}px)`}}>
-        <path
-          className="domain"
-          stroke="currentColor"
-          d={`M0.5,6V0.5H${size.width}V6`}
-        ></path>
-        { getX() }
-      </g>
-    </svg>
+  return (  
+    <g className={style['x-axis']} style={{transform: `translateY(${size.height}px)`}}>
+      <path
+        className="domain"
+        stroke="currentColor"
+        d={`M0.5,6V0.5H${size.width}V6`}
+      ></path>
+      { getX() }
+    </g>
   )
 }
 

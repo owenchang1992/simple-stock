@@ -1,6 +1,7 @@
 import { LegacyRef, useEffect, useRef, useState } from 'react'
 import style from './StockMain.module.scss'
 import XAxis from './XAxis'
+import YAxis from './YAxis'
 
 type RefType = LegacyRef<HTMLDivElement> | null
 
@@ -99,13 +100,19 @@ const StockMain: React.FC<Props>= ({ stockData }) => {
       onWheel={zoom}
       onMouseDown={pan}
     >
-      <XAxis
-        size={size}
-        scaleX={scaleX}
-        offsetX={offsetX}
-        timeSeries={titleList}
-        matadata={stockData.metaData}
-      />
+      <svg className={style.gragh}>
+        <XAxis
+          size={size}
+          scaleX={scaleX}
+          offsetX={offsetX}
+          timeSeries={titleList}
+          matadata={stockData.metaData}
+        />
+        <YAxis
+          statistics={stockData.metaData.statistics}
+          size={size}
+        />
+      </svg>
     </div>
   )
 }
