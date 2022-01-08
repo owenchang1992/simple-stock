@@ -1,5 +1,7 @@
 import style from './StockMain.module.scss'
 import Volume from './Volume'
+import LowHeight from './LowHeight'
+import OpenClose from './OpenClose'
 
 interface TickProps {
   title: string,
@@ -29,48 +31,72 @@ interface XAxisProps {
     volume: number,
     title: string
   }[],
+  matadata: any
 }
 
-const XAxis: React.FC<XAxisProps> = ({ timeSeries, size, scaleX, offsetX }) => {
+const XAxis: React.FC<XAxisProps> = ({ matadata, timeSeries, size, scaleX, offsetX }) => {
   const getX = () => {
     const getTranslateX = (title: number): number => {
       const unit = size.width / timeSeries.length;
       return title * unit / scaleX + unit * offsetX
     }
- 
+
     return timeSeries.map((data) => {
       const translateX = getTranslateX(data.xAxisTitle)
 
       // TODO: detect the max height of volume
-      const volumeUnit = 200000000
+      const volumeUnit = matadata.statistics.volume.max
+      const scale = size.height / matadata.statistics.value.max
+
       // TODO: auto adjust the title interval level
       return (
-        <>
-          {
-            data.volume
-            && translateX >= 0
-            && translateX <= size.width
-            && (
-              <Volume 
-                translateX={getTranslateX(data.xAxisTitle)}
-                negative={data.open - data.close > 0}
-                value={(data.volume / volumeUnit * size.height * 0.2)}
-              />
-            )
-          }
-          {
-            data.xAxisTitle % 10 === 0
-            && translateX >= 0
-            && translateX <= size.width
-            && (
-              <XAxisTick
-                key={String(data.xAxisTitle)}
-                title={data.xAxisTitle.toString()}
-                translateX={getTranslateX(data.xAxisTitle)}
-              />
-            )
-          }
-        </> 
+        translateX >= 0
+        && translateX <= size.width 
+        && (
+          <>
+            {
+              data.open
+              && data.close
+              && (
+                <OpenClose
+                  scale={scale}
+                  negative={data.open - data.close > 0}
+                  translateX={getTranslateX(data.xAxisTitle)}
+                  data={data}
+                />
+              )
+            }
+            {
+              data.low
+              && data.height
+              && (
+                <LowHeight
+                  scale={scale}
+                  translateX={getTranslateX(data.xAxisTitle)}
+                  data={data}
+                />
+              )
+            }
+            {
+              data.volume && (
+                <Volume 
+                  translateX={getTranslateX(data.xAxisTitle)}
+                  negative={data.open - data.close > 0}
+                  value={(data.volume / volumeUnit * size.height * 0.2)}
+                />
+              )
+            }
+            {
+              data.xAxisTitle % 10 === 0 && (
+                <XAxisTick
+                  key={String(data.xAxisTitle)}
+                  title={data.xAxisTitle.toString()}
+                  translateX={getTranslateX(data.xAxisTitle)}
+                />
+              )
+            }
+          </>
+        )
       )
     })
   }

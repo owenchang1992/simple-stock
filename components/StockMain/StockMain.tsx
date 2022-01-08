@@ -104,6 +104,7 @@ const StockMain: React.FC<Props>= ({ stockData }) => {
         scaleX={scaleX}
         offsetX={offsetX}
         timeSeries={titleList}
+        matadata={stockData.metaData}
       />
     </div>
   )

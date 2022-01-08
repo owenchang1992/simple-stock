@@ -7,7 +7,7 @@ interface Props {
 const Volume: React.FC<Props> = ({ translateX, value, negative }) => {
   return (
     <rect 
-      width="4.4120603015075375"
+      width="4"
       x={translateX}
       y="0"
       fill={negative ? "red" : "#01b61a"}
