@@ -1,5 +1,6 @@
 import styles from './StockTitle.module.scss'
 
+// TODO: organize this
 interface Props {
   metaData: {
     ['1. Information']?: string,

@@ -13,8 +13,12 @@ interface Stock {
   title: string
 }
 
+// TODO: remove any
 interface Props {
-  timeSeries: Stock[]
+  stockData: {
+    metaData: any,
+    timeSeries: Stock[]
+  }
 }
 
 /**
@@ -26,7 +30,7 @@ interface Props {
  *  TODO: adjust width when window size change
  * @returns 
  */
-const StockMain: React.FC<Props>= ({ timeSeries }) => {
+const StockMain: React.FC<Props>= ({ stockData }) => {
   const svgRef: RefType= useRef(null)
 
   const [size, setSize] = useState({
@@ -84,7 +88,7 @@ const StockMain: React.FC<Props>= ({ timeSeries }) => {
     Array(length + 1).keys(),
     x => ({ 
       xAxisTitle: x - 40,
-      ...timeSeries[x - 40],
+      ...stockData.timeSeries[x - 40],
     })
   )
 

@@ -20,16 +20,49 @@ const translateData = (stockData: any) => {
       low: Number(data[title]['3. low']),
       close: Number(data[title]['4. close']),
       volume: Number(data[title]['5. volume']),
-    }))
+    })).reverse()
 
     return newTimeSeries
   }
 
+  const statistics = (timeSeries: any[]) => {
+    let statisticsResult = {
+      value: {
+        max: timeSeries[0].height,
+        min: timeSeries[0].low,
+      },
+      volume: {
+        max: timeSeries[0].volume,
+      }
+    }
+  
+    timeSeries.forEach(element => {
+      if (element.height > statisticsResult.value.max) {
+        statisticsResult.value.max = element.height
+      }
+
+      if (element.low < statisticsResult.value.min) {
+        statisticsResult.value.min = element.low
+      }
+
+      if (element.volume > statisticsResult.volume.max) {
+        statisticsResult.volume.max = element.volume
+      }
+    });
+
+    return statisticsResult
+  }
+
+  const timeSeries = translateTimeSeries(
+    stockData['Time Series (Daily)']
+  )
+
   return  {
-    metaData: stockData['Meta Data'],
-    timeSeries: translateTimeSeries(
-      stockData['Time Series (Daily)']
-    ),
+    metaData: {
+      ...stockData['Meta Data'],
+      statistics: statistics(timeSeries)
+    },
+    timeSeries,
   }
 }
 
@@ -50,7 +83,7 @@ const Home: NextPage = () => {
         stockData && (
           <div className={styles.container}>
             <StockTitle metaData={stockData.metaData}/>
-            <StockMain timeSeries={stockData.timeSeries}/>
+            <StockMain stockData={stockData}/>
           </div>
         )
       }

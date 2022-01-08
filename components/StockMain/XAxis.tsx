@@ -1,4 +1,5 @@
 import style from './StockMain.module.scss'
+import Volume from './Volume'
 
 interface TickProps {
   title: string,
@@ -40,9 +41,23 @@ const XAxis: React.FC<XAxisProps> = ({ timeSeries, size, scaleX, offsetX }) => {
     return timeSeries.map((data) => {
       const translateX = getTranslateX(data.xAxisTitle)
 
+      // TODO: detect the max height of volume
+      const volumeUnit = 200000000
       // TODO: auto adjust the title interval level
       return (
         <>
+          {
+            data.volume
+            && translateX >= 0
+            && translateX <= size.width
+            && (
+              <Volume 
+                translateX={getTranslateX(data.xAxisTitle)}
+                negative={data.open - data.close > 0}
+                value={(data.volume / volumeUnit * size.height * 0.2)}
+              />
+            )
+          }
           {
             data.xAxisTitle % 10 === 0
             && translateX >= 0
