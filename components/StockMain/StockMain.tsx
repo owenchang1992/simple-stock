@@ -4,14 +4,28 @@ import XAxis from './XAxis'
 
 type RefType = LegacyRef<HTMLDivElement> | null
 
+interface Stock {
+  open: number,
+  height: number,
+  low: number,
+  close: number,
+  volume: number,
+  title: string
+}
+interface Props {
+  timeSeries: Stock[]
+}
+
 /**
  * states:
  *  size: container width and height
  *  offsetX: pan level
  *  scaleX: zoom level
+ * 
+ *  TODO: adjust width when window size change
  * @returns 
  */
-const StockMain = () => {
+const StockMain: React.FC<Props>= ({ timeSeries }) => {
   const svgRef: RefType= useRef(null)
 
   const [size, setSize] = useState({
@@ -61,6 +75,17 @@ const StockMain = () => {
       })
     }
   }, [svgRef])
+  
+  // TODO: customize length
+  const length = 200
+
+  let titleList = Array.from(
+    Array(length + 1).keys(),
+    x => ({ 
+      xAxisTitle: x - 40,
+      ...timeSeries[x - 40],
+    })
+  )
 
   return (
     <div
@@ -69,7 +94,12 @@ const StockMain = () => {
       onWheel={zoom}
       onMouseDown={pan}
     >
-      <XAxis size={size} scaleX={scaleX} offsetX={offsetX}/>
+      <XAxis
+        size={size}
+        scaleX={scaleX}
+        offsetX={offsetX}
+        timeSeries={titleList}
+      />
     </div>
   )
 }
