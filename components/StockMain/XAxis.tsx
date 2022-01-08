@@ -1,0 +1,69 @@
+import style from './StockMain.module.scss'
+
+interface TickProps {
+  title: string,
+  translateX: number
+}
+
+const XAxisTick: React.FC<TickProps> = ({ title, translateX }) => (
+  <g className="tick" opacity="1" transform={`translate(${translateX})`}>
+    <line stroke="currentColor" y2="6"></line>
+    <text fill="currentColor" y="9" dy="0.71em">{title}</text>
+  </g>
+)
+
+interface XAxisProps {
+  size: {
+    width: number,
+    height: number,
+  },
+  scaleX: number,
+  offsetX: number,
+}
+
+const length = 200
+
+const XAxis: React.FC<XAxisProps> = ({ size, scaleX, offsetX }) => {
+  const getX = () => {
+    let titleList = Array.from(
+      Array(length + 1).keys(),
+      x => x - 40
+    )
+
+    const getTranslateX = (title: number): number => {
+      const unit = size.width / length;
+      return title * unit / scaleX + unit * offsetX
+    }
+ 
+    return titleList.map((title) => {
+      const translateX = getTranslateX(title)
+      return (
+        title % 5 === 0 
+        && translateX >= 0
+        && translateX <= size.width
+        && (
+          <XAxisTick
+            key={title}
+            title={title.toString()}
+            translateX={getTranslateX(title)}
+          />
+        )
+      )
+    })
+  }
+
+  return (
+    <svg className={style.gragh}>
+      <g className={style['x-axis']} style={{transform: `translateY(${size.height}px)`}}>
+        <path
+          className="domain"
+          stroke="currentColor"
+          d={`M0.5,6V0.5H${size.width}V6`}
+        ></path>
+        { getX() }
+      </g>
+    </svg>
+  )
+}
+
+export default XAxis
