@@ -2,11 +2,11 @@ import type { NextPage } from 'next'
 import useSWR from 'swr'
 import styles from '../styles/Home.module.css'
 import { getStock } from '../apis/getStock'
+import { SetStateAction, useState } from 'react'
 
 import StockTitle from '../components/StockTitle/StockTitle'
 import StockMain from '../components/StockMain/StockMain'
-
-import testData from '../public/test.json'
+import Input from '../components/Input'
 
 //TODO 1. handle organize Meta Data 2. fix typescript any
 const translateData = (stockData: any) => {
@@ -34,17 +34,27 @@ const translateData = (stockData: any) => {
 }
 
 const Home: NextPage = () => {
-  // const { data, error } = useSWR('AAPL', getStock)
-  // const stockData = data && !error && translateData(data.data)
-  const stockData = translateData(testData)
+  const [stockName, setStockName] = useState('AAPL')
+
+  const { data, error } = useSWR(stockName, getStock)
+  const stockData = data && !error && translateData(data.data)
+
+  const handleClick = (input: SetStateAction<string>) => {
+    setStockName(input)
+  }
 
   return (
-    stockData ? (
-      <div className={styles.container}>
-        <StockTitle metaData={stockData.metaData}/>
-        <StockMain timeSeries={stockData.timeSeries}/>
-      </div>
-    ) : null
+    <>
+      <Input onSubmit={handleClick}/>
+      {
+        stockData && (
+          <div className={styles.container}>
+            <StockTitle metaData={stockData.metaData}/>
+            <StockMain timeSeries={stockData.timeSeries}/>
+          </div>
+        )
+      }
+    </>
   )
 }
 
