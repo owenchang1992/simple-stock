@@ -53,14 +53,12 @@ const StockMain: React.FC<Props>= ({ stockData }) => {
       scale -= 0.01
     }
 
-    // TODO: Limit the range of scale
     setScaleX(Math.min(Math.max(0.4, scale), 1))
   }
 
   const pan = (event: { clientX: number }) => {
     if (svgRef?.current) {
       svgRef.current.onmousemove = (e) => {
-        // TODO: Adjust the limit of pan level
         setOffsetX(event.clientX - e.clientX)
       }
 
@@ -81,17 +79,6 @@ const StockMain: React.FC<Props>= ({ stockData }) => {
       })
     }
   }, [svgRef])
-  
-  // TODO: customize length
-  const length = 200
-
-  let titleList = Array.from(
-    Array(length + 1).keys(),
-    x => ({ 
-      xAxisTitle: x - 40,
-      ...stockData.timeSeries[x - 40],
-    })
-  )
 
   return (
     <div
@@ -105,8 +92,7 @@ const StockMain: React.FC<Props>= ({ stockData }) => {
           size={size}
           scaleX={scaleX}
           offsetX={offsetX}
-          timeSeries={titleList}
-          matadata={stockData.metaData}
+          stockData={stockData}
         />
         <YAxis
           statistics={stockData.metaData.statistics}

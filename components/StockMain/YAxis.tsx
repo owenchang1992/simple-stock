@@ -15,8 +15,18 @@ const YAxis: React.FC<Props> = ({ statistics, size }) => {
   let YTitles = Array.from(Array(Math.round(statistics.value.max)).keys()).reverse()
 
   return (
-    <g className="y-axis" fill="none" fontSize="10" fontFamily="sans-serif" textAnchor="end">
-      <path className="domain" stroke="currentColor" d={`M-6,${size.height}H0.5V0.5H-6`}></path>
+    <g
+      className="y-axis"
+      fill="none"
+      fontSize="10"
+      fontFamily="sans-serif"
+      textAnchor="end"
+    >
+      <path
+        className="domain"
+        stroke="currentColor"
+        d={`M-6,${size.height}H0.5V0.5H-6`}
+      />
       {
         YTitles.map((item, index) => (
           item % 10 === 0 && (
