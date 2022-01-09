@@ -15,7 +15,7 @@ const Volume: React.FC<Props> = ({ scale, translateX, data, negative }) => {
     <rect 
       width="4"
       x={translateX}
-      y={data.open * scale}
+      y={negative ? data.close * scale : data.open * scale}
       fill={negative ? "red" : "#01b61a"}
       height={Math.abs(data.open - data.close) * scale}
       style={{
