@@ -2,7 +2,7 @@ import style from './StockMain.module.scss'
 import Volume from './Volume'
 import LowHeight from './LowHeight'
 import OpenClose from './OpenClose'
-import { VALUE_VOLUME_RATIO, BUFFER_X } from '../../constant'
+import { VALUE_VOLUME_RATIO, BUFFER_X, BUFFER_Y } from '../../constant'
 
 // TODO: auto adjust the title interval level
 const xAxisUnit = 10
@@ -42,13 +42,21 @@ interface XAxisProps {
 const XAxis: React.FC<XAxisProps> = ({ stockData, size, scaleX, offsetX }) => {
   const { timeSeries, metaData } = stockData
 
+
   const getTranslateX = (title: number): number => {
     const unit = size.width / timeSeries.length;
     return title * unit / scaleX + unit * offsetX
   }
 
+  const getScaleY = (value: { max: any; min: any }) => {
+    const { max, min } = value
+
+    return size.height / (max - min + 2 * BUFFER_Y)
+  }
+
   const volumeUnit = metaData.statistics.volume.max
-  const scale = size.height / metaData.statistics.value.max
+  const scale = getScaleY(metaData.statistics.value)
+  const ybase = metaData.statistics.value.min - BUFFER_Y
 
   const titleList = Array.from(
     Array(BUFFER_X * 2 + timeSeries.length + 1).keys(),
@@ -80,11 +88,13 @@ const XAxis: React.FC<XAxisProps> = ({ stockData, size, scaleX, offsetX }) => {
                     <>
                       <OpenClose
                         scale={scale}
+                        ybase={ybase}
                         negative={data.open - data.close > 0}
                         translateX={getTranslateX(data.xAxisTitle)}
                         data={data}
                       />
                       <LowHeight
+                        ybase={ybase}
                         scale={scale}
                         translateX={getTranslateX(data.xAxisTitle)}
                         data={data}

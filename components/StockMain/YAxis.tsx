@@ -1,3 +1,5 @@
+import { BUFFER_Y } from '../../constant'
+
 interface Props {
   statistics: {
     value: {
@@ -12,7 +14,11 @@ interface Props {
 }
 
 const YAxis: React.FC<Props> = ({ statistics, size }) => {
-  let YTitles = Array.from(Array(Math.round(statistics.value.max)).keys()).reverse()
+  const { max, min } = statistics.value
+  let YTitles = Array.from(
+    Array(Math.round(max - min + 2 * BUFFER_Y)).keys(),
+    x => x + Math.round(min - BUFFER_Y),
+  ).reverse()
 
   return (
     <g
