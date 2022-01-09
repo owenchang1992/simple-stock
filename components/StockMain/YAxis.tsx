@@ -21,6 +21,7 @@ const YAxis: React.FC<Props> = ({ statistics, size }) => {
         YTitles.map((item, index) => (
           item % 10 === 0 && (
             <g
+              key={item}
               className="tick"
               opacity="1"
               transform={`translate(0, ${index * size.height / YTitles.length})`}

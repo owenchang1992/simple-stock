@@ -53,7 +53,7 @@ const XAxis: React.FC<XAxisProps> = ({ matadata, timeSeries, size, scaleX, offse
         translateX >= 0
         && translateX <= size.width 
         && (
-          <>
+          <g key={String(data.xAxisTitle)}>
             {
               data.open
               && data.close
@@ -89,13 +89,12 @@ const XAxis: React.FC<XAxisProps> = ({ matadata, timeSeries, size, scaleX, offse
             {
               data.xAxisTitle % 10 === 0 && (
                 <XAxisTick
-                  key={String(data.xAxisTitle)}
                   title={data.xAxisTitle.toString()}
                   translateX={getTranslateX(data.xAxisTitle)}
                 />
               )
             }
-          </>
+          </g>
         )
       )
     })
